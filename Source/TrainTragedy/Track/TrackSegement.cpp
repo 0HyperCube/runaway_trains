@@ -35,6 +35,8 @@ void ATrackSegement::BeginPlay()
 {
 	Super::BeginPlay();
 	PlaceEnds();
+
+	
 	
 	
 }
@@ -47,14 +49,16 @@ void ATrackSegement::PlaceEnds()
 		int pointToChange = 0;
 		SplineComponent->SetWorldLocationAtSplinePoint(pointToChange, InConnector->GetActorLocation());
 		SplineComponent->UpdateSpline();
-		InConnector->InTracks.AddUnique(this);
+		if (!InConnector->InTracks.Contains((ATrackSegement*)this))
+			InConnector->InTracks.AddUnique(this);
 	}
 
 	if (OutConnector != nullptr) {
 		int pointToChange = SplineComponent->GetNumberOfSplinePoints() - 1;
 		SplineComponent->SetWorldLocationAtSplinePoint(pointToChange, OutConnector->GetActorLocation());
 		SplineComponent->UpdateSpline();
-		OutConnector->OutTracks.AddUnique(this);
+		if(!OutConnector->OutTracks.Contains((ATrackSegement*) this))
+			OutConnector->OutTracks.AddUnique(this);
 	}
 
 	RedrawGraphics();

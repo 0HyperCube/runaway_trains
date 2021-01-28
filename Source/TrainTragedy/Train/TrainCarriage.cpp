@@ -5,11 +5,6 @@
 #include <Runtime/Engine/Classes/Kismet/KismetSystemLibrary.h>
 #include <Runtime/Engine/Public/DrawDebugHelpers.h>
 
-//void ATrainCarriage::Derail()
-//{
-//
-//}
-
 // Sets default values
 ATrainCarriage::ATrainCarriage()
 {
@@ -36,9 +31,13 @@ void ATrainCarriage::BeginPlay()
 {
 	Super::BeginPlay();
 
-	if (!(BackSegement) || !FrontSegement) {
+	// if not on track to start with
+	if (!(BackSegement)) {
 		Derail();
 		return;
+	}
+	else {
+		
 	}
 	
 }

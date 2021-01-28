@@ -4,10 +4,12 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "Components/BoxComponent.h"
 #include "SegementConnector.generated.h"
 
+class UBoxComponent;
 class ATrackSegement;
+class USplineMeshComponent;
+class USceneComponent;
 
 UCLASS()
 class TRAINTRAGEDY_API ASegementConnector : public AActor
@@ -36,6 +38,8 @@ public:
 	UPROPERTY(BlueprintReadWrite, VisibleAnywhere)
 		UBoxComponent* ChangePointsCollision;
 
+	UPROPERTY(BlueprintReadWrite, VisibleAnywhere)
+		USplineMeshComponent* DirectionArrow;
 
 	UPROPERTY(EditAnywhere, Category = "Point Flow")
 		TArray<ATrackSegement*> InTracks = { nullptr };
@@ -43,7 +47,7 @@ public:
 	UPROPERTY(EditAnywhere, Category = "Point Flow")
 		int InTrackIndex = 0;
 
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, Category = "Point Flow")
 		TArray<ATrackSegement*> OutTracks = { nullptr };
 
 	UPROPERTY(EditAnywhere, Category = "Point Flow")
@@ -60,5 +64,23 @@ public:
 	void RemoveBadSplinePoints();
 
 	void PlaceEndsOfTracks();
+
+	void PlaceDirectionArrow();
+
+	// Allow train to go in a different direction along a piece of track
+	float FindNewDirection(float currentDirection, ATrackSegement* currentTrack);
+
+private:
+	float LerpAlpha = 1.001f;
+
+	FVector InPosition;
+	FVector InTangent;
+	FVector OutPosition;
+	FVector OutTangent;
+
+	FVector OldInPosition;
+	FVector OldInTangent;
+	FVector OldOutPosition;
+	FVector OldOutTangent;
 
 };

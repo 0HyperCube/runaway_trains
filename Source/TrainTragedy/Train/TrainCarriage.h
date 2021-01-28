@@ -41,6 +41,9 @@ public:
 
 	UPROPERTY(BlueprintReadWrite, VisibleAnywhere)
 		UBoxComponent* CarriageCollider;
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void FindPositionFromActorLocation();
 	
 
 	//UFUNCTION(BlueprintImplementableEvent)
@@ -53,6 +56,8 @@ private:
 	float CarrageLength;
 
 	void Derail();
+
+	
 	
 	FVector  LastLoc= FVector::ZeroVector;
 	FVector MovementSpeed = FVector::ZeroVector;
@@ -68,7 +73,7 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-	// Updates position of bugie
+	//// Move a distance along the track. When reaching the end of a track go to the next one.
 	void UpdatePosition(ATrackSegement** segement, float* distance, float movement);
 
 	// When collides
