@@ -49,17 +49,17 @@ void ATrainCarriage::Tick(float DeltaTime)
 
 	if (IsOnTrack) {
 
-		UpdatePosition(&BackSegement, &BackDistance, Speed * DeltaTime);
+		BackIsBackwards = UpdatePosition(&BackSegement, &BackDistance, (Speed * DeltaTime));
 		FVector BackLoc = BackSegement->SplineComponent->GetLocationAtDistanceAlongSpline(BackDistance, ESplineCoordinateSpace::World);
 		DrawDebugPoint(GetWorld(), BackLoc, 5, FColor(52, 220, 239), false);
 
 
-		UpdatePosition(&FrontSegement, &FrontDistance, Speed * DeltaTime);
+		FrontIsBackwards = UpdatePosition(&FrontSegement, &FrontDistance, (Speed * DeltaTime));
 		FVector FrontLoc = FrontSegement->SplineComponent->GetLocationAtDistanceAlongSpline(FrontDistance, ESplineCoordinateSpace::World);
 		DrawDebugPoint(GetWorld(), FrontLoc, 5, FColor(52, 220, 239), false);
 
 		LastLoc = GetActorLocation();
-		SetActorLocation((BackLoc + FrontLoc) / 2 + FVector(0, 0, 300));
+		SetActorLocation((BackLoc + FrontLoc) / 2 + FVector(0, 0, Height));
 		MovementSpeed = (GetActorLocation() - LastLoc) / DeltaTime;
 
 		SetActorRotation((BackLoc - FrontLoc).Rotation());
@@ -71,32 +71,54 @@ void ATrainCarriage::Tick(float DeltaTime)
 	
 }
 
-void ATrainCarriage::UpdatePosition(ATrackSegement** segement, float* distance, float movement)
+bool ATrainCarriage::UpdatePosition(ATrackSegement** segement, float* distance, float movement)
 {
 	*distance += movement;
 	while (*distance > (*segement)->SplineComponent->GetSplineLength()) {
+
+		
 		if ((*segement)->GetInTrack()==nullptr) {
 			Derail();
-			return;
+			return false;
 		}
 		else {
 			*distance -= (*segement)->SplineComponent->GetSplineLength();
-			*distance += movement;
-			*segement = (*segement)->GetInTrack();
+			if ((*segement)->GetInTrack()->OutConnectorIsOut) {
+				*segement = (*segement)->GetInTrack();
+				return false;
+			}
+			else {
+				*segement = (*segement)->GetInTrack();
+				*distance += (*segement)->SplineComponent->GetSplineLength();
+				
+				return true;
+			}
+			
 		}
 	}
 
 	while (*distance < 0) {
 		if ((*segement)->GetOutTrack() == nullptr) {
 			Derail();
-			return;
+			return false;
 		}
 		else {
-			*distance += movement;
-			*segement = (*segement)->GetOutTrack();
-			*distance += (*segement)->SplineComponent->GetSplineLength();
+			
+			if ((*segement)->GetOutTrack()->InConnectorIsIn) {
+				*segement = (*segement)->GetOutTrack();
+				*distance += (*segement)->SplineComponent->GetSplineLength();
+				
+				return true;
+			}
+			else {
+				*segement = (*segement)->GetOutTrack();
+				*distance -= (*segement)->SplineComponent->GetSplineLength();
+				return false;
+			}
+			
 		}
 	}
+	return movement < 0;
 }
 
 void ATrainCarriage::OnCompHit(const FHitResult& Hit)

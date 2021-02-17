@@ -19,6 +19,10 @@ class TRAINTRAGEDY_API ATrainCarriage : public AActor
 
 public:
 
+	// Height in CM above spline
+	UPROPERTY(EditDefaultsOnly)
+		float Height = 200;
+
 	// Speed in cm / second
 	UPROPERTY(EditAnywhere)
 		float Speed = 3000;
@@ -27,6 +31,8 @@ public:
 	UPROPERTY(EditAnywhere)
 		ATrackSegement* BackSegement;
 
+	UPROPERTY(EditAnywhere)
+	bool BackIsBackwards = false;
 
 	// The distance along the segment the back bugie rests.
 	UPROPERTY(EditAnywhere)
@@ -35,6 +41,9 @@ public:
 
 	UPROPERTY(EditAnywhere)
 		ATrackSegement* FrontSegement;
+
+	UPROPERTY(EditAnywhere)
+	bool FrontIsBackwards = false;
 
 	UPROPERTY(EditAnywhere)
 		float FrontDistance;
@@ -74,7 +83,7 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 	//// Move a distance along the track. When reaching the end of a track go to the next one.
-	void UpdatePosition(ATrackSegement** segement, float* distance, float movement);
+	bool UpdatePosition(ATrackSegement** segement, float* distance, float movement);
 
 	// When collides
 	UFUNCTION(BlueprintCallable)

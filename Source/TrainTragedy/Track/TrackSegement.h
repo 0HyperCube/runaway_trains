@@ -32,7 +32,13 @@ public:
 		ASegementConnector* InConnector = nullptr;
 
 	UPROPERTY(EditAnywhere)
+		bool InConnectorIsIn = true;
+
+	UPROPERTY(EditAnywhere)
 		ASegementConnector* OutConnector = nullptr;
+
+	UPROPERTY(EditAnywhere)
+		bool OutConnectorIsOut = true;
 
 	void PlaceEnds();
 

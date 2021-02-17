@@ -96,7 +96,6 @@ void ASegementConnector::RemoveBadSplinePoints()
 			i -= 1;
 		}
 	}
-
 	
 
 }
@@ -116,20 +115,32 @@ void ASegementConnector::PlaceEndsOfTracks()
 void ASegementConnector::PlaceDirectionArrow()
 {
 
-	if (InTracks.Num() < 1 || OutTracks.Num() < 1) {
+	if (InTracks.Num() < 1 || OutTracks.Num() < 1 || InTracks.Num()+ OutTracks.Num()<3) {
 		return;
 	}
+	float length = GetInTrack()->SplineComponent->GetSplineLength();
 
-	float offset = InTracks.Num() > 1 ? 1500.f : 0.f; 
+	float distanceAlong = (GetInTrack()->InConnector == (ASegementConnector*)this ?
+				(InTracks.Num() > 1 ? 1500.f : 0.f) :
+		length-	(InTracks.Num() > 1 ? 1500.f : 0.f));
 
-	InPosition	= GetInTrack()->SplineComponent->GetLocationAtDistanceAlongSpline	(offset, ESplineCoordinateSpace::World);
-	InTangent	= GetInTrack()->SplineComponent->GetDirectionAtDistanceAlongSpline	(offset, ESplineCoordinateSpace::World)*1500;
+	UE_LOG(LogTemp, Warning, TEXT("dist along for in track %f"), distanceAlong);
 
-	offset = InTracks.Num() > 1 ? 0.f : 1500.f;
+	InPosition	= GetInTrack()->SplineComponent->GetLocationAtDistanceAlongSpline	(distanceAlong, ESplineCoordinateSpace::World);
+	InTangent	= GetInTrack()->SplineComponent->GetDirectionAtDistanceAlongSpline	(distanceAlong, ESplineCoordinateSpace::World)*1500;
 
-	float length = GetOutTrack()->SplineComponent->GetSplineLength();
-	OutPosition = GetOutTrack()->SplineComponent->GetLocationAtDistanceAlongSpline	(length-offset, ESplineCoordinateSpace::World);
-	OutTangent	= GetOutTrack()->SplineComponent->GetDirectionAtDistanceAlongSpline	(length-offset, ESplineCoordinateSpace::World)*1500;
+
+	length = GetOutTrack()->SplineComponent->GetSplineLength();
+	distanceAlong = (GetOutTrack()->OutConnector == (ASegementConnector*)this ?
+		length -	(OutTracks.Num() > 1 ? 1500.f : 0.f) :
+					(OutTracks.Num() > 1 ? 1500.f : 0.f));
+
+	
+	OutPosition = GetOutTrack()->SplineComponent->GetLocationAtDistanceAlongSpline	(distanceAlong, ESplineCoordinateSpace::World);
+	OutTangent	= GetOutTrack()->SplineComponent->GetDirectionAtDistanceAlongSpline	(distanceAlong, ESplineCoordinateSpace::World)*1500;
+	
+	OutTangent = GetOutTrack()->InConnectorIsIn ? OutTangent : OutTangent * -1;
+	InTangent = GetInTrack()->OutConnectorIsOut ? InTangent : InTangent * -1;
 
 
 	DirectionArrow->SetWorldLocationAndRotation(FVector::ZeroVector, FRotator::ZeroRotator);
@@ -141,7 +152,7 @@ void ASegementConnector::PlaceDirectionArrow()
 			FMath::Lerp(OldOutPosition,	OutPosition,	LerpAlpha),
 			FMath::Lerp(-OldOutTangent,	-OutTangent,	LerpAlpha)
 		);
-	else
+	else  
 		DirectionArrow->SetStartAndEnd(
 			FMath::Lerp(OldOutPosition, OutPosition,	LerpAlpha),
 			FMath::Lerp(OldOutTangent,	OutTangent,		LerpAlpha),
@@ -149,6 +160,7 @@ void ASegementConnector::PlaceDirectionArrow()
 			FMath::Lerp(OldInTangent,	InTangent,		LerpAlpha)
 			
 		);
+
 
 	
 }

@@ -33,10 +33,21 @@ void ATrackSegement::OnConstruction(const FTransform& Transform)
 
 void ATrackSegement::BeginPlay()
 {
+	if (InConnectorIsIn)
+		InConnector->InTracks.AddUnique(this);
+	else
+		InConnector->OutTracks.AddUnique(this);
+
+	if (OutConnectorIsOut)
+		OutConnector->OutTracks.AddUnique(this);
+	else
+		OutConnector->InTracks.AddUnique(this);
+
+
 	Super::BeginPlay();
 	PlaceEnds();
 
-	
+
 	
 	
 }
@@ -49,16 +60,12 @@ void ATrackSegement::PlaceEnds()
 		int pointToChange = 0;
 		SplineComponent->SetWorldLocationAtSplinePoint(pointToChange, InConnector->GetActorLocation());
 		SplineComponent->UpdateSpline();
-		if (!InConnector->InTracks.Contains((ATrackSegement*)this))
-			InConnector->InTracks.AddUnique(this);
 	}
 
 	if (OutConnector != nullptr) {
 		int pointToChange = SplineComponent->GetNumberOfSplinePoints() - 1;
 		SplineComponent->SetWorldLocationAtSplinePoint(pointToChange, OutConnector->GetActorLocation());
 		SplineComponent->UpdateSpline();
-		if(!OutConnector->OutTracks.Contains((ATrackSegement*) this))
-			OutConnector->OutTracks.AddUnique(this);
 	}
 
 	RedrawGraphics();
@@ -68,7 +75,10 @@ ATrackSegement* ATrackSegement::GetInTrack()
 {
 	if (OutConnector == nullptr)
 		return nullptr;
-	return OutConnector->GetInTrack();
+
+	return OutConnectorIsOut ?
+		OutConnector->GetInTrack():
+		OutConnector->GetOutTrack();
 }
 
 ATrackSegement* ATrackSegement::GetOutTrack()
@@ -76,6 +86,8 @@ ATrackSegement* ATrackSegement::GetOutTrack()
 	
 	if (InConnector == nullptr)
 		return nullptr;
-	return InConnector->GetOutTrack();
+	return InConnectorIsIn ?
+		InConnector->GetOutTrack():
+		InConnector->GetInTrack();
 	
 }
