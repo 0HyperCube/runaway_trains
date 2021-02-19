@@ -74,49 +74,46 @@ void ATrainCarriage::Tick(float DeltaTime)
 bool ATrainCarriage::UpdatePosition(ATrackSegement** segement, float* distance, float movement)
 {
 	*distance += movement;
-	while (*distance > (*segement)->SplineComponent->GetSplineLength()) {
 
-		
-		if ((*segement)->GetInTrack()==nullptr) {
-			Derail();
-			return false;
-		}
-		else {
-			*distance -= (*segement)->SplineComponent->GetSplineLength();
-			if ((*segement)->GetInTrack()->OutConnectorIsOut) {
-				*segement = (*segement)->GetInTrack();
+	float currentLen = (*segement)->SplineComponent->GetSplineLength();
+
+	int i = 0;
+
+
+	while (*distance > currentLen || *distance < 0) {
+		if (*distance > currentLen) {
+
+			if ((*segement)->GetOutTrack() == nullptr) {
+				Derail();
 				return false;
 			}
-			else {
+			else if ((*segement)->GetOutTrack()->InConnector == (*segement)->OutConnector) {
+				*distance -= currentLen;
 				*segement = (*segement)->GetInTrack();
-				*distance += (*segement)->SplineComponent->GetSplineLength();
-				
-				return true;
 			}
-			
-		}
-	}
-
-	while (*distance < 0) {
-		if ((*segement)->GetOutTrack() == nullptr) {
-			Derail();
-			return false;
+			else {
+				
+				//*segement = (*segement)->GetInTrack();
+				//*distance -= currentLen;
+				
+			}
 		}
 		else {
-			
-			if ((*segement)->GetOutTrack()->InConnectorIsIn) {
-				*segement = (*segement)->GetOutTrack();
-				*distance += (*segement)->SplineComponent->GetSplineLength();
-				
-				return true;
-			}
-			else {
-				*segement = (*segement)->GetOutTrack();
-				*distance -= (*segement)->SplineComponent->GetSplineLength();
+			if ((*segement)->GetInTrack() == nullptr) {
+				Derail();
 				return false;
 			}
-			
+			else if ((*segement)->GetInTrack()->InConnector == (*segement)->OutConnector) {
+
+			}
+			else {
+
+			}
 		}
+		currentLen = (*segement)->SplineComponent->GetSplineLength();
+
+		i++;
+		if (i > 10) { return movement < 0; }
 	}
 	return movement < 0;
 }

@@ -83,7 +83,7 @@ void ASegementConnector::RemoveBadSplinePoints()
 {
 	for (int i = 0; i < OutTracks.Num(); i++) {
 		ATrackSegement* track = OutTracks[i];
-		if (track == nullptr || track->OutConnector != this) {
+		if (track == nullptr || (track->OutConnector != this && track->OutConnectorIsOut) || (track->InConnector != this && !track->InConnectorIsIn)) {
 			OutTracks.RemoveAt(i);
 			i -= 1;
 		}
@@ -91,7 +91,7 @@ void ASegementConnector::RemoveBadSplinePoints()
 
 	for (int i = 0; i < InTracks.Num(); i++) {
 		ATrackSegement* track = InTracks[i];
-		if (track == nullptr || track->InConnector != this) {
+		if (track == nullptr || (track->InConnector != this && track->InConnectorIsIn) || (track->OutConnector != this && !track->OutConnectorIsOut)) {
 			InTracks.RemoveAt(i);
 			i -= 1;
 		}
