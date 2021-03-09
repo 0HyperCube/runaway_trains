@@ -24,12 +24,12 @@ ASegementConnector::ASegementConnector()
 	SetRootComponent(LocationComp);
 	
 	ChangePointsCollision = CreateDefaultSubobject<UBoxComponent>(TEXT("PointCollision"));
-	ChangePointsCollision->AttachToComponent(LocationComp, FAttachmentTransformRules::SnapToTargetNotIncludingScale);
+	ChangePointsCollision->SetupAttachment(LocationComp);
 	//ChangePointsCollision->SetCollisionProfileName("PointTrigger");
 	//ChangePointsCollision->SetBoxExtent(FVector(700, 500, 100));
 	//ChangePointsCollision->SetRelativeLocation(FVector(400, 0, 0));
 	
-	//DirectionArrow = CreateDefaultSubobject<USplineMeshComponent>(TEXT("DirectionArrow"));
+	DirectionArrow = CreateDefaultSubobject<USplineMeshComponent>(TEXT("DirectionArrow"));
 
 }
 
@@ -51,7 +51,8 @@ void ASegementConnector::BeginPlay()
 	Super::BeginPlay();
 
 	PlaceEndsOfTracks();
-	
+
+	Initalised = false;
 }
 
 // Called every frame
@@ -70,16 +71,15 @@ void ASegementConnector::Tick(float DeltaTime)
 		RemoveBadSplinePoints();
 
 		PlaceDirectionArrow();
+		Initalised = true;
 	}		
-	Initalised = true;
+	
 
 
 }
 
 void ASegementConnector::ChangeDirection()
 {
-	if (GEngine)
-		GEngine->AddOnScreenDebugMessage(-1, 3, FColor::Blue, TEXT("Lit changing points rn!"));
 	OldInPosition	= InPosition;
 	OldInTangent	= InTangent;
 	OldOutPosition	= OutPosition;
@@ -131,54 +131,54 @@ void ASegementConnector::PlaceEndsOfTracks()
 
 void ASegementConnector::PlaceDirectionArrow()
 {
-	//if (!GetOutTrack() || !GetInTrack()) { return; }
-	//if (InTracks.Num() < 1 || OutTracks.Num() < 1 || InTracks.Num()+ OutTracks.Num()<3) {
-	//	return;
-	//}
-	//float length = GetInTrack()->SplineComponent->GetSplineLength();
-	//
-	//float distanceAlong = (GetInTrack()->InConnector == (ASegementConnector*)this ?
-	//			(InTracks.Num() > 1 ? 1500.f : 0.f) :
-	//	length-	(InTracks.Num() > 1 ? 1500.f : 0.f));
-	//
-	//UE_LOG(LogTemp, Warning, TEXT("dist along for in track %f"), distanceAlong);
-	//
-	//InPosition	= GetInTrack()->SplineComponent->GetLocationAtDistanceAlongSpline	(distanceAlong, ESplineCoordinateSpace::World);
-	//InTangent	= GetInTrack()->SplineComponent->GetDirectionAtDistanceAlongSpline	(distanceAlong, ESplineCoordinateSpace::World)*1500;
-	//
-	//
-	//length = GetOutTrack()->SplineComponent->GetSplineLength();
-	//distanceAlong = (GetOutTrack()->OutConnector == (ASegementConnector*)this ?
-	//	length -	(OutTracks.Num() > 1 ? 1500.f : 0.f) :
-	//				(OutTracks.Num() > 1 ? 1500.f : 0.f));
-	//
-	//
-	//OutPosition = GetOutTrack()->SplineComponent->GetLocationAtDistanceAlongSpline	(distanceAlong, ESplineCoordinateSpace::World);
-	//OutTangent	= GetOutTrack()->SplineComponent->GetDirectionAtDistanceAlongSpline	(distanceAlong, ESplineCoordinateSpace::World)*1500;
-	//
+	if (!GetOutTrack() || !GetInTrack()) { return; }
+	if (InTracks.Num() < 1 || OutTracks.Num() < 1 || InTracks.Num()+ OutTracks.Num()<3) {
+		return;
+	}
+	float length = GetInTrack()->SplineComponent->GetSplineLength();
+	
+	float distanceAlong = (GetInTrack()->InConnector == (ASegementConnector*)this ?
+				(InTracks.Num() > 1 ? 1500.f : 0.f) :
+		length-	(InTracks.Num() > 1 ? 1500.f : 0.f));
+	
+	UE_LOG(LogTemp, Warning, TEXT("dist along for in track %f"), distanceAlong);
+	
+	InPosition	= GetInTrack()->SplineComponent->GetLocationAtDistanceAlongSpline	(distanceAlong, ESplineCoordinateSpace::World);
+	InTangent	= GetInTrack()->SplineComponent->GetDirectionAtDistanceAlongSpline	(distanceAlong, ESplineCoordinateSpace::World)*1500;
+	
+	
+	length = GetOutTrack()->SplineComponent->GetSplineLength();
+	distanceAlong = (GetOutTrack()->OutConnector == (ASegementConnector*)this ?
+		length -	(OutTracks.Num() > 1 ? 1500.f : 0.f) :
+					(OutTracks.Num() > 1 ? 1500.f : 0.f));
+	
+	
+	OutPosition = GetOutTrack()->SplineComponent->GetLocationAtDistanceAlongSpline	(distanceAlong, ESplineCoordinateSpace::World);
+	OutTangent	= GetOutTrack()->SplineComponent->GetDirectionAtDistanceAlongSpline	(distanceAlong, ESplineCoordinateSpace::World)*1500;
+	
 	//OutTangent = GetOutTrack()->InConnectorIsIn ? OutTangent : OutTangent * -1;
 	//InTangent = GetInTrack()->OutConnectorIsOut ? InTangent : InTangent * -1;
-	//
-	//
-	//DirectionArrow->SetWorldLocationAndRotation(FVector::ZeroVector, FRotator::ZeroRotator);
-	//
-	//if(InTracks.Num()>1)
-	//	DirectionArrow->SetStartAndEnd(
-	//		FMath::Lerp(OldInPosition,	InPosition,		LerpAlpha),
-	//		FMath::Lerp(-OldInTangent,	-InTangent,		LerpAlpha),
-	//		FMath::Lerp(OldOutPosition,	OutPosition,	LerpAlpha),
-	//		FMath::Lerp(-OldOutTangent,	-OutTangent,	LerpAlpha)
-	//	);
-	//else  
-	//	DirectionArrow->SetStartAndEnd(
-	//		FMath::Lerp(OldOutPosition, OutPosition,	LerpAlpha),
-	//		FMath::Lerp(OldOutTangent,	OutTangent,		LerpAlpha),
-	//		FMath::Lerp(OldInPosition,	InPosition,		LerpAlpha),
-	//		FMath::Lerp(OldInTangent,	InTangent,		LerpAlpha)
-	//		
-	//	);
-	//
-	//
+	
+	
+	DirectionArrow->SetWorldLocationAndRotation(FVector::ZeroVector, FRotator::ZeroRotator);
+	
+	if(InTracks.Num()>1)
+		DirectionArrow->SetStartAndEnd(
+			FMath::Lerp(OldInPosition,	InPosition,		LerpAlpha),
+			FMath::Lerp(-OldInTangent,	-InTangent,		LerpAlpha),
+			FMath::Lerp(OldOutPosition,	OutPosition,	LerpAlpha),
+			FMath::Lerp(-OldOutTangent,	-OutTangent,	LerpAlpha)
+		);
+	else  
+		DirectionArrow->SetStartAndEnd(
+			FMath::Lerp(OldOutPosition, OutPosition,	LerpAlpha),
+			FMath::Lerp(OldOutTangent,	OutTangent,		LerpAlpha),
+			FMath::Lerp(OldInPosition,	InPosition,		LerpAlpha),
+			FMath::Lerp(OldInTangent,	InTangent,		LerpAlpha)
+			
+		);
+	
+	
 	
 }
 

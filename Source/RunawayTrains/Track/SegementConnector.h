@@ -55,7 +55,7 @@ public:
 
 
 	ATrackSegement* GetInTrack() { 
-		//if (InTracks.Num() < 1) { return nullptr; }
+		if (InTracks.Num() < 1) { return nullptr; }
 		return InTracks[InTrackIndex];
 	};
 	ATrackSegement* GetOutTrack() { 

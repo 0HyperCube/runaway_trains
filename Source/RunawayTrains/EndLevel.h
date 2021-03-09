@@ -33,4 +33,7 @@ protected:
 	UFUNCTION(BlueprintImplementableEvent, meta = (DisplayName = "On Lose"))
 		void LoseUI();
 
+private:
+	bool Ended;
+
 };

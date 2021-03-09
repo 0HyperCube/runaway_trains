@@ -4,6 +4,8 @@
 #include "TrainCarriage.h"
 #include <Runtime/Engine/Classes/Kismet/KismetSystemLibrary.h>
 #include "Kismet/GameplayStatics.h"
+#include "RunawayTrains/EndLevel.h"
+#include <RunawayTrains/RunawayTrainsGameModeBase.h>
 #include <Runtime/Engine/Public/DrawDebugHelpers.h>
 
 // Sets default values
@@ -24,6 +26,18 @@ void ATrainCarriage::Derail()
 		IsOnTrack = false;
 		CarriageCollider->SetEnableGravity(true);
 		CarriageCollider->AddImpulse(MovementSpeed, NAME_None, true);
+
+		auto world = GetWorld();
+		auto GameMode = world->GetAuthGameMode();
+		if (GameMode) {
+			
+			auto MyGameMode = Cast<ARunawayTrainsGameModeBase>(GameMode);
+			if (MyGameMode) {
+				if (MyGameMode->EndLevel) {
+					MyGameMode->EndLevel->LoseLevel();
+				}
+			}
+		}
 	}
 }
 
