@@ -1,10 +1,9 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-
-#include "Engine/World.h"
 #include "EndLevel.h"
-#include <TrainTragedy/TrainTragedyGameModeBase.h>
+#include "Engine/World.h"
+#include <RunawayTrains/RunawayTrainsGameModeBase.h>
 #include "Engine/Engine.h"
 
 // Sets default values
@@ -14,7 +13,7 @@ AEndLevel::AEndLevel()
 	PrimaryActorTick.bCanEverTick = false;
 
 	if (GetWorld()) {
-		Cast<ATrainTragedyGameModeBase>(GetWorld()->GetAuthGameMode())->EndLevel = this;
+		Cast<ARunawayTrainsGameModeBase>(GetWorld()->GetAuthGameMode())->EndLevel = this;
 	}
 
 }

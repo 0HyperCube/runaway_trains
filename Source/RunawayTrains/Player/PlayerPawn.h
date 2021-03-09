@@ -7,7 +7,7 @@
 #include "PlayerPawn.generated.h"
 
 UCLASS()
-class TRAINTRAGEDY_API APlayerPawn : public APawn
+class RUNAWAYTRAINS_API APlayerPawn : public APawn
 {
 	GENERATED_BODY()
 

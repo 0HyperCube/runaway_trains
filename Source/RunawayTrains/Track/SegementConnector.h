@@ -12,7 +12,7 @@ class USplineMeshComponent;
 class USceneComponent;
 
 UCLASS()
-class TRAINTRAGEDY_API ASegementConnector : public AActor
+class RUNAWAYTRAINS_API ASegementConnector : public AActor
 {
 	GENERATED_BODY()
 	

@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/GameModeBase.h"
-#include "TrainTragedyGameModeBase.generated.h"
+#include "RunawayTrainsGameModeBase.generated.h"
 
 /**
  * 
@@ -13,7 +13,7 @@
 class AEndLevel;
 
 UCLASS()
-class TRAINTRAGEDY_API ATrainTragedyGameModeBase : public AGameModeBase
+class RUNAWAYTRAINS_API ARunawayTrainsGameModeBase : public AGameModeBase
 {
 	GENERATED_BODY()
 

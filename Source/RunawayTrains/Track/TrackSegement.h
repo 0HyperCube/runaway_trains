@@ -10,7 +10,7 @@
 class ASegementConnector;
 
 UCLASS()
-class TRAINTRAGEDY_API ATrackSegement : public AActor
+class RUNAWAYTRAINS_API ATrackSegement : public AActor
 {
 	GENERATED_BODY()
 

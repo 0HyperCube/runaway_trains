@@ -2,9 +2,9 @@
 
 using UnrealBuildTool;
 
-public class TrainTragedy : ModuleRules
+public class RunawayTrains : ModuleRules
 {
-	public TrainTragedy(ReadOnlyTargetRules Target) : base(Target)
+	public RunawayTrains(ReadOnlyTargetRules Target) : base(Target)
 	{
 		PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
 	

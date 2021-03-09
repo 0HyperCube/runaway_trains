@@ -8,7 +8,7 @@
 #include "EndLevel.generated.h"
 
 UCLASS()
-class TRAINTRAGEDY_API AEndLevel : public AActor
+class RUNAWAYTRAINS_API AEndLevel : public AActor
 {
 	GENERATED_BODY()
 	

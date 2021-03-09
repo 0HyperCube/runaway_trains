@@ -11,7 +11,7 @@
  * 
  */
 UCLASS()
-class TRAINTRAGEDY_API AGameLevelBase : public ALevelScriptActor
+class RUNAWAYTRAINS_API AGameLevelBase : public ALevelScriptActor
 {
 	GENERATED_BODY()
 };

@@ -3,12 +3,12 @@
 using UnrealBuildTool;
 using System.Collections.Generic;
 
-public class TrainTragedyEditorTarget : TargetRules
+public class RunawayTrainsEditorTarget : TargetRules
 {
-	public TrainTragedyEditorTarget( TargetInfo Target) : base(Target)
+	public RunawayTrainsEditorTarget( TargetInfo Target) : base(Target)
 	{
 		Type = TargetType.Editor;
 		DefaultBuildSettings = BuildSettingsVersion.V2;
-		ExtraModuleNames.AddRange( new string[] { "TrainTragedy" } );
+		ExtraModuleNames.AddRange( new string[] { "RunawayTrains" } );
 	}
 }

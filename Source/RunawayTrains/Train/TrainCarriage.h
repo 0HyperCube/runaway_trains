@@ -5,7 +5,7 @@
 #include "CoreMinimal.h"
 #include <tuple>
 #include "GameFramework/Actor.h"
-#include <TrainTragedy\Track\TrackSegement.h>
+#include <RunawayTrains\Track\TrackSegement.h>
 #include "Components/BoxComponent.h"
 #include "TrainCarriage.generated.h"
 
@@ -13,7 +13,7 @@
 #define TrackSegementT ATrackSegement*
 
 UCLASS()
-class TRAINTRAGEDY_API ATrainCarriage : public AActor
+class RUNAWAYTRAINS_API ATrainCarriage : public AActor
 {
 	GENERATED_BODY()
 
