@@ -54,8 +54,14 @@ public:
 		int OutTrackIndex = 0;
 
 
-	ATrackSegement* GetInTrack() { return InTracks[InTrackIndex]; };
-	ATrackSegement* GetOutTrack() { return OutTracks[OutTrackIndex]; }
+	ATrackSegement* GetInTrack() { 
+		//if (InTracks.Num() < 1) { return nullptr; }
+		return InTracks[InTrackIndex];
+	};
+	ATrackSegement* GetOutTrack() { 
+		if (OutTracks.Num() < 1) { return nullptr; }
+		return OutTracks[OutTrackIndex % OutTracks.Num()];
+	}
 
 
 	UFUNCTION(BlueprintCallable, Category = "Point Control")
@@ -82,5 +88,7 @@ private:
 	FVector OldInTangent;
 	FVector OldOutPosition;
 	FVector OldOutTangent;
+
+	bool Initalised = false;
 
 };

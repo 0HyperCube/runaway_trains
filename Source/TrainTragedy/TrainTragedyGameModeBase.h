@@ -9,9 +9,16 @@
 /**
  * 
  */
+
+class AEndLevel;
+
 UCLASS()
 class TRAINTRAGEDY_API ATrainTragedyGameModeBase : public AGameModeBase
 {
 	GENERATED_BODY()
+
+public:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	AEndLevel* EndLevel;
 	
 };

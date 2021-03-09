@@ -33,16 +33,18 @@ void ATrackSegement::OnConstruction(const FTransform& Transform)
 
 void ATrackSegement::BeginPlay()
 {
-	if (InConnectorIsIn)
-		InConnector->InTracks.AddUnique(this);
-	else
-		InConnector->OutTracks.AddUnique(this);
-
-	if (OutConnectorIsOut)
-		OutConnector->OutTracks.AddUnique(this);
-	else
-		OutConnector->InTracks.AddUnique(this);
-
+	if (InConnector != nullptr) {
+		if (InConnectorIsIn)
+			InConnector->InTracks.AddUnique(this);
+		else
+			InConnector->OutTracks.AddUnique(this);
+	}
+	if (OutConnector != nullptr) {
+		if (OutConnectorIsOut)
+			OutConnector->OutTracks.AddUnique(this);
+		else
+			OutConnector->InTracks.AddUnique(this);
+	}
 
 	Super::BeginPlay();
 	PlaceEnds();
@@ -86,6 +88,7 @@ ATrackSegement* ATrackSegement::GetOutTrack()
 	
 	if (InConnector == nullptr)
 		return nullptr;
+
 	return InConnectorIsIn ?
 		InConnector->GetOutTrack():
 		InConnector->GetInTrack();

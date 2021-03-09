@@ -3,6 +3,7 @@
 
 #include "TrainCarriage.h"
 #include <Runtime/Engine/Classes/Kismet/KismetSystemLibrary.h>
+#include "Kismet/GameplayStatics.h"
 #include <Runtime/Engine/Public/DrawDebugHelpers.h>
 
 // Sets default values
@@ -47,14 +48,15 @@ void ATrainCarriage::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	if (stopped) { return; }
+
 	if (IsOnTrack) {
 
-		BackIsBackwards = UpdatePosition(&BackSegement, &BackDistance, (Speed * DeltaTime));
+		UpdatePosition(&BackSegement, &BackDistance, (Speed * DeltaTime), &BackIsBackwards);
 		FVector BackLoc = BackSegement->SplineComponent->GetLocationAtDistanceAlongSpline(BackDistance, ESplineCoordinateSpace::World);
 		DrawDebugPoint(GetWorld(), BackLoc, 5, FColor(52, 220, 239), false);
 
-
-		FrontIsBackwards = UpdatePosition(&FrontSegement, &FrontDistance, (Speed * DeltaTime));
+		UpdatePosition(&FrontSegement, &FrontDistance, (Speed * DeltaTime), &FrontIsBackwards);
 		FVector FrontLoc = FrontSegement->SplineComponent->GetLocationAtDistanceAlongSpline(FrontDistance, ESplineCoordinateSpace::World);
 		DrawDebugPoint(GetWorld(), FrontLoc, 5, FColor(52, 220, 239), false);
 
@@ -71,51 +73,46 @@ void ATrainCarriage::Tick(float DeltaTime)
 	
 }
 
-bool ATrainCarriage::UpdatePosition(ATrackSegement** segement, float* distance, float movement)
+void ATrainCarriage::UpdatePosition(ATrackSegement** segement, float* distance, float movement, bool* isBackwards)
 {
-	*distance += movement;
+	if (stopped) { return; }
+
+	*distance += movement;// *(*isBackwards) ? -1 : 1;
 
 	float currentLen = (*segement)->SplineComponent->GetSplineLength();
 
 	int i = 0;
 
-
 	while (*distance > currentLen || *distance < 0) {
+		if (stopped) { return; }
+
 		if (*distance > currentLen) {
 
-			if ((*segement)->GetOutTrack() == nullptr) {
-				Derail();
-				return false;
-			}
-			else if ((*segement)->GetOutTrack()->InConnector == (*segement)->OutConnector) {
-				*distance -= currentLen;
-				*segement = (*segement)->GetInTrack();
-			}
-			else {
-				
-				//*segement = (*segement)->GetInTrack();
-				//*distance -= currentLen;
-				
-			}
-		}
-		else {
 			if ((*segement)->GetInTrack() == nullptr) {
 				Derail();
-				return false;
-			}
-			else if ((*segement)->GetInTrack()->InConnector == (*segement)->OutConnector) {
-
+				return;
 			}
 			else {
-
+				*distance -= currentLen;
+				(*segement) = (*segement)->GetInTrack();
 			}
+				
+				
+			
+		}
+		else {
+			stopped = true;
 		}
 		currentLen = (*segement)->SplineComponent->GetSplineLength();
 
 		i++;
-		if (i > 10) { return movement < 0; }
+		if (i > 10) {
+			stopped = true; 
+			//UGameplayStatics::SetGamePaused(GetWorld(), true);
+			return; 
+		}
 	}
-	return movement < 0;
+	return;
 }
 
 void ATrainCarriage::OnCompHit(const FHitResult& Hit)

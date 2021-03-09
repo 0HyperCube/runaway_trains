@@ -83,11 +83,13 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 	//// Move a distance along the track. When reaching the end of a track go to the next one.
-	bool UpdatePosition(ATrackSegement** segement, float* distance, float movement);
+	void UpdatePosition(ATrackSegement** segement, float* distance, float movement, bool* isBackwards);
 
 	// When collides
 	UFUNCTION(BlueprintCallable)
 		void OnCompHit(const FHitResult& Hit);
 
 
+
+	bool stopped = false;
 };
