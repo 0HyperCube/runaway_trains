@@ -4,6 +4,7 @@
 #include "TrainCarriage.h"
 #include <Runtime/Engine/Classes/Kismet/KismetSystemLibrary.h>
 #include "Kismet/GameplayStatics.h"
+#include "Engine/Engine.h"
 #include "RunawayTrains/EndLevel.h"
 #include <RunawayTrains/RunawayTrainsGameModeBase.h>
 #include <Runtime/Engine/Public/DrawDebugHelpers.h>
@@ -91,7 +92,10 @@ void ATrainCarriage::UpdatePosition(ATrackSegement** segement, float* distance, 
 {
 	if (stopped) { return; }
 
-	*distance += movement;// *(*isBackwards) ? -1 : 1;
+	if (GEngine)
+		GEngine->AddOnScreenDebugMessage(-1, 0.f, FColor::Red, FString::Printf(TEXT("direction: %s"), (*isBackwards) ?TEXT("Backwards"):TEXT("Forwards"))); //, ((*isBackwards) ? TEXT("Forward") : TEXT("Backwards"))
+	float mul = (*isBackwards) ? -1.f : 1.f;
+	*distance += movement * mul;// *(*isBackwards) ? -1 : 1;
 
 	float currentLen = (*segement)->SplineComponent->GetSplineLength();
 
@@ -107,15 +111,34 @@ void ATrainCarriage::UpdatePosition(ATrackSegement** segement, float* distance, 
 				return;
 			}
 			else {
-				*distance -= currentLen;
-				(*segement) = (*segement)->GetInTrack();
+				if ((*segement)->OutConnectorIsOut && ((*segement)->GetInTrack()->OutConnectorIsOut || (*segement)->GetInTrack()->InConnector==(*segement)->OutConnector)) {
+					*distance -= currentLen;
+					(*segement) = (*segement)->GetInTrack();
+				}
+				else {
+					*distance -= currentLen;
+					(*segement) = (*segement)->GetInTrack();
+					currentLen = (*segement)->SplineComponent->GetSplineLength();
+					*distance = currentLen;// -*distance;
+					*isBackwards = !*isBackwards;
+				}
+				
 			}
 				
 				
 			
 		}
 		else {
-			stopped = true;
+			if ((*segement)->GetOutTrack() == nullptr) {
+				Derail();
+				return;
+			}
+			else {
+				
+				(*segement) = (*segement)->GetOutTrack();
+				currentLen = (*segement)->SplineComponent->GetSplineLength();
+				*distance += currentLen;
+			}
 		}
 		currentLen = (*segement)->SplineComponent->GetSplineLength();
 

@@ -35,15 +35,15 @@ void ATrackSegement::BeginPlay()
 {
 	if (InConnector != nullptr) {
 		if (InConnectorIsIn)
-			InConnector->InTracks.AddUnique(this);
+			InConnector->InTracks.Add(InConnectorIndex, this);
 		else
-			InConnector->OutTracks.AddUnique(this);
+			InConnector->OutTracks.Add(InConnectorIndex, this);
 	}
 	if (OutConnector != nullptr) {
 		if (OutConnectorIsOut)
-			OutConnector->OutTracks.AddUnique(this);
+			OutConnector->OutTracks.Add(OutConnectorIndex, this);
 		else
-			OutConnector->InTracks.AddUnique(this);
+			OutConnector->InTracks.Add(OutConnectorIndex, this);
 	}
 
 	Super::BeginPlay();

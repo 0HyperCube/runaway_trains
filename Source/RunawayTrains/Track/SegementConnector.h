@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Containers/Map.h"
 #include "GameFramework/Actor.h"
 #include "SegementConnector.generated.h"
 
@@ -42,13 +43,13 @@ public:
 		USplineMeshComponent* DirectionArrow;
 
 	UPROPERTY(EditAnywhere, Category = "Point Flow")
-		TArray<ATrackSegement*> InTracks = { nullptr };
+		TMap <int16, ATrackSegement*> InTracks = {};
 
 	UPROPERTY(EditAnywhere, Category = "Point Flow")
 		int InTrackIndex = 0;
 
 	UPROPERTY(EditAnywhere, Category = "Point Flow")
-		TArray<ATrackSegement*> OutTracks = { nullptr };
+		TMap<int16, ATrackSegement*> OutTracks = {};
 
 	UPROPERTY(EditAnywhere, Category = "Point Flow")
 		int OutTrackIndex = 0;
@@ -60,7 +61,7 @@ public:
 	};
 	ATrackSegement* GetOutTrack() { 
 		if (OutTracks.Num() < 1) { return nullptr; }
-		return OutTracks[OutTrackIndex % OutTracks.Num()];
+		return OutTracks[OutTrackIndex];
 	}
 
 

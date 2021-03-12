@@ -28,16 +28,22 @@ public:
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 		USplineComponent* SplineComponent;
 
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, Category="In Connector")
 		ASegementConnector* InConnector = nullptr;
 
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, Category = "In Connector")
+		int16 InConnectorIndex = 0;
+
+	UPROPERTY(EditAnywhere, Category = "In Connector")
 		bool InConnectorIsIn = true;
 
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, Category = "Out Connector")
 		ASegementConnector* OutConnector = nullptr;
 
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, Category = "Out Connector")
+		int16 OutConnectorIndex = 0;
+
+	UPROPERTY(EditAnywhere, Category = "Out Connector")
 		bool OutConnectorIsOut = true;
 
 	void PlaceEnds();

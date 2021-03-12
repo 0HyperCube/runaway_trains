@@ -120,12 +120,14 @@ void ASegementConnector::RemoveBadSplinePoints()
 void ASegementConnector::PlaceEndsOfTracks()
 {
 
-	for (ATrackSegement* Track : InTracks) {
-		Track->PlaceEnds();
+	for (auto It = InTracks.CreateConstIterator(); It; ++It)
+	{
+		It.Value()->PlaceEnds();
 	}
 
-	for (ATrackSegement* Track : OutTracks) {
-		Track->PlaceEnds();
+	for (auto It = OutTracks.CreateConstIterator(); It; ++It)
+	{
+		It.Value()->PlaceEnds();
 	}
 }
 
@@ -185,7 +187,13 @@ void ASegementConnector::PlaceDirectionArrow()
 
 float ASegementConnector::FindNewDirection(float currentDirection, ATrackSegement* currentTrack)
 {
-	bool isGoingIn = InTracks.Contains(currentTrack);
+	bool isGoingIn = false;
+	for (auto It = InTracks.CreateConstIterator(); It; ++It)
+	{
+		if (It.Value() == currentTrack) {
+			isGoingIn = true;
+		}
+	}
 	bool isPositive = currentDirection > 0;
 
 	if ((isGoingIn && isPositive) || (!isGoingIn && !isPositive)) {
