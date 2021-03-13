@@ -63,8 +63,6 @@ void ATrainCarriage::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	if (stopped) { return; }
-
 	if (IsOnTrack) {
 
 		UpdatePosition(&BackSegement, &BackDistance, (Speed * DeltaTime), &BackIsBackwards);
@@ -90,71 +88,60 @@ void ATrainCarriage::Tick(float DeltaTime)
 
 void ATrainCarriage::UpdatePosition(ATrackSegement** segement, float* distance, float movement, bool* isBackwards)
 {
-	if (stopped) { return; }
-
-	if (GEngine)
-		GEngine->AddOnScreenDebugMessage(-1, 0.f, FColor::Red, FString::Printf(TEXT("direction: %s"), (*isBackwards) ?TEXT("Backwards"):TEXT("Forwards"))); //, ((*isBackwards) ? TEXT("Forward") : TEXT("Backwards"))
+	// changes current distance
 	float mul = (*isBackwards) ? -1.f : 1.f;
-	*distance += movement * mul;// *(*isBackwards) ? -1 : 1;
+	*distance += movement * mul;
 
+	// Get len of current segement
 	float currentLen = (*segement)->SplineComponent->GetSplineLength();
 
-	int i = 0;
-
 	while (*distance > currentLen || *distance < 0) {
-		if (stopped) { return; }
-
+		// If gone over the end of the track
 		if (*distance > currentLen) {
 
+			// If no more tracks in this direction
 			if ((*segement)->GetInTrack() == nullptr) {
 				Derail();
 				return;
 			}
 			else {
+				// If the train should keep going in the same direction
 				if ((*segement)->OutConnectorIsOut && ((*segement)->GetInTrack()->OutConnectorIsOut || (*segement)->GetInTrack()->InConnector==(*segement)->OutConnector)) {
 					*distance -= currentLen;
 					(*segement) = (*segement)->GetInTrack();
 				}
+				// Reverse the train's direction
 				else {
 					*distance -= currentLen;
 					(*segement) = (*segement)->GetInTrack();
 					currentLen = (*segement)->SplineComponent->GetSplineLength();
-					*distance = currentLen;// -*distance;
+					*distance = currentLen -*distance;
 					*isBackwards = !*isBackwards;
 				}
-				
 			}
-				
-				
-			
 		}
+		// If gone over the start of the track
 		else {
+			// If no more tracks in this direction
 			if ((*segement)->GetOutTrack() == nullptr) {
 				Derail();
 				return;
 			}
+			// Go to next track
 			else {
-				
 				(*segement) = (*segement)->GetOutTrack();
 				currentLen = (*segement)->SplineComponent->GetSplineLength();
 				*distance += currentLen;
 			}
 		}
 		currentLen = (*segement)->SplineComponent->GetSplineLength();
-
-		i++;
-		if (i > 10) {
-			stopped = true; 
-			//UGameplayStatics::SetGamePaused(GetWorld(), true);
-			return; 
-		}
 	}
 	return;
 }
 
+
 void ATrainCarriage::OnCompHit(const FHitResult& Hit)
 {
-
 	if ((Hit.Actor != NULL) && (Hit.Actor != this) && (Hit.Component != NULL) && (Hit.Actor->IsA<ATrainCarriage>()))
 	{
 		Cast<ATrainCarriage>(Hit.Actor)->Derail();

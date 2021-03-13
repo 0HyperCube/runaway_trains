@@ -31,7 +31,6 @@ public:
 	UPROPERTY(EditAnywhere)
 		ATrackSegement* BackSegement;
 
-	UPROPERTY(EditAnywhere)
 	bool BackIsBackwards = false;
 
 	// The distance along the segment the back bugie rests.
@@ -42,7 +41,6 @@ public:
 	UPROPERTY(EditAnywhere)
 		ATrackSegement* FrontSegement;
 
-	UPROPERTY(EditAnywhere)
 	bool FrontIsBackwards = false;
 
 	UPROPERTY(EditAnywhere)
@@ -50,14 +48,9 @@ public:
 
 	UPROPERTY(BlueprintReadWrite, VisibleAnywhere)
 		UBoxComponent* CarriageCollider;
-
+	
 	UFUNCTION(BlueprintImplementableEvent)
-	void FindPositionFromActorLocation();
-	
-
-	//UFUNCTION(BlueprintImplementableEvent)
-	//	void Derail();
-	
+		void FindPositionFromActorLocation();
 
 private:
 	bool IsOnTrack = true;
@@ -67,8 +60,10 @@ private:
 	void Derail();
 
 	
-	
-	FVector  LastLoc= FVector::ZeroVector;
+	// The location of the train cariage last frame. Used to calculate movement speed
+	FVector LastLoc = FVector::ZeroVector;
+
+	// The speed in units per second
 	FVector MovementSpeed = FVector::ZeroVector;
 
 public:
@@ -88,8 +83,4 @@ public:
 	// When collides
 	UFUNCTION(BlueprintCallable)
 		void OnCompHit(const FHitResult& Hit);
-
-
-
-	bool stopped = false;
 };
