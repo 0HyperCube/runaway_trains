@@ -1,5 +1,3 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
 #include "SegementConnector.h"
 #include <Runtime/Engine/Classes/Kismet/KismetSystemLibrary.h>
 #include <Runtime/Engine/Public/DrawDebugHelpers.h>
@@ -13,10 +11,6 @@
 // Sets default values
 ASegementConnector::ASegementConnector()
 {
-	//if (!GetWorld()) {
-	//	return;
-	//}
-
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 	
@@ -25,9 +19,6 @@ ASegementConnector::ASegementConnector()
 	
 	ChangePointsCollision = CreateDefaultSubobject<UBoxComponent>(TEXT("PointCollision"));
 	ChangePointsCollision->SetupAttachment(LocationComp);
-	//ChangePointsCollision->SetCollisionProfileName("PointTrigger");
-	//ChangePointsCollision->SetBoxExtent(FVector(700, 500, 100));
-	//ChangePointsCollision->SetRelativeLocation(FVector(400, 0, 0));
 	
 	DirectionArrow = CreateDefaultSubobject<USplineMeshComponent>(TEXT("DirectionArrow"));
 
@@ -35,14 +26,7 @@ ASegementConnector::ASegementConnector()
 
 void ASegementConnector::OnConstruction(const FTransform& Transform)
 {
-	if (!GetWorld()) {
-		return;
-	}
 
-	//RemoveBadSplinePoints();
-	//PlaceEndsOfTracks();
-
-	//PlaceDirectionArrow();
 }
 
 // Called when the game starts or when spawned
@@ -60,14 +44,13 @@ void ASegementConnector::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	// Smoothly move the direction arrow
 	if (LerpAlpha < 1) {
 		LerpAlpha += DeltaTime/.1f;
 		PlaceDirectionArrow();
 	}
 
 	if (!Initalised) {
-		
-
 		RemoveBadSplinePoints();
 
 		PlaceDirectionArrow();

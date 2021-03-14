@@ -1,5 +1,3 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
 #pragma once
 
 #include "CoreMinimal.h"
@@ -11,6 +9,10 @@ class UBoxComponent;
 class ATrackSegement;
 class USplineMeshComponent;
 class USceneComponent;
+
+/*
+ * This class handles the sounds of the birds and the trains
+ */
 
 UCLASS()
 class RUNAWAYTRAINS_API ASegementConnector : public AActor
@@ -70,20 +72,27 @@ public:
 
 	void RemoveBadSplinePoints();
 
+	// Make sure the spline starts and ends at the connectors
 	void PlaceEndsOfTracks();
 
+	// Positions the arrow shouwing the direction of the points
 	void PlaceDirectionArrow();
 
 	// Allow train to go in a different direction along a piece of track
 	float FindNewDirection(float currentDirection, ATrackSegement* currentTrack);
 
 private:
+	// How far the arrow has lerped (for change points anim)
 	float LerpAlpha = 1.001f;
+
+	// The new position of the arrow
 
 	FVector InPosition;
 	FVector InTangent;
 	FVector OutPosition;
 	FVector OutTangent;
+
+	// The previous values for the lerp
 
 	FVector OldInPosition;
 	FVector OldInTangent;

@@ -1,6 +1,3 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
-
 #include "TrackSegement.h"
 #include "SegementConnector.h"
 
@@ -33,6 +30,7 @@ void ATrackSegement::OnConstruction(const FTransform& Transform)
 
 void ATrackSegement::BeginPlay()
 {
+	// Assigns the references to the connectors
 	if (InConnector != nullptr) {
 		if (InConnectorIsIn)
 			InConnector->InTracks.Add(InConnectorIndex, this);
@@ -48,15 +46,11 @@ void ATrackSegement::BeginPlay()
 
 	Super::BeginPlay();
 	PlaceEnds();
-
-
-	
-	
 }
 
 void ATrackSegement::PlaceEnds()
 {
-	// checking connectors
+	// Set the end points of the spline to the position of the connectors
 
 	if (InConnector != nullptr) {
 		int pointToChange = 0;

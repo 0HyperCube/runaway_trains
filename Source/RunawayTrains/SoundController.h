@@ -1,11 +1,13 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
 #pragma once
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "Components/AudioComponent.h"
 #include "SoundController.generated.h"
+
+/*
+ * This class handles the sounds of the birds and the trains
+ */
 
 UCLASS()
 class RUNAWAYTRAINS_API ASoundController : public AActor
@@ -33,6 +35,7 @@ public:
 	UPROPERTY(BlueprintReadWrite, VisibleAnywhere)
 		UAudioComponent* Ambience;
 
+	// Is there a moving train in the level
 	bool bIsTrain = true;
 
 };

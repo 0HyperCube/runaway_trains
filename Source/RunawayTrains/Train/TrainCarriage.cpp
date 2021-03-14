@@ -1,6 +1,3 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
-
 #include "TrainCarriage.h"
 #include <Runtime/Engine/Classes/Kismet/KismetSystemLibrary.h>
 #include "Kismet/GameplayStatics.h"
@@ -58,20 +55,18 @@ void ATrainCarriage::BeginPlay()
 {
 	Super::BeginPlay();
 
-	// if not on track to start with
-	if (!(BackSegement)) {
+	// if not on track to start with then derail
+	if (!BackSegement) {
 		Derail();
 		return;
 	}
-	else {
-		
-	}
 
-	TArray<ASoundController*> out;
-	FindAllActors(GetWorld(), out);
-	for (ASoundController* var : out)
+	// Grab a reference to the sound manager
+	TArray<ASoundController*> soundManagers;
+	FindAllActors(GetWorld(), soundManagers);
+	for (ASoundController* current : soundManagers)
 	{
-		Sound = var;
+		Sound = current;
 	}
 	
 }
@@ -81,6 +76,7 @@ void ATrainCarriage::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	// Update the train's position
 	if (IsOnTrack) {
 		Sound->bIsTrain = true;
 		UpdatePosition(&BackSegement, &BackDistance, (Speed * DeltaTime), &BackIsBackwards);

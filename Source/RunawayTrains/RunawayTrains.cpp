@@ -1,4 +1,4 @@
-// Copyright 1998-2019 Epic Games, Inc. All Rights Reserved.
+// Copyright 1998-2021 Epic Games, Inc. All Rights Reserved.
 
 #include "RunawayTrains.h"
 #include "Modules/ModuleManager.h"

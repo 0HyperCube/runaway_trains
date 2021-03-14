@@ -1,5 +1,3 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
 #pragma once
 
 #include "CoreMinimal.h"
@@ -8,6 +6,10 @@
 #include "TrackSegement.generated.h"
 
 class ASegementConnector;
+
+/*
+ * This class handles a segment of track between two points
+ */
 
 UCLASS()
 class RUNAWAYTRAINS_API ATrackSegement : public AActor

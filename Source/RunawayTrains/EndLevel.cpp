@@ -1,6 +1,3 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
-
 #include "EndLevel.h"
 #include "Engine/World.h"
 #include "Engine/Engine.h"
@@ -14,9 +11,6 @@ AEndLevel::AEndLevel()
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = false;
 
-	//if (GetWorld()) {
-	//	Cast<ARunawayTrainsGameModeBase>(GetWorld()->GetAuthGameMode())->EndLevel = this;
-	//}
 	Ended = false;
 
 }
@@ -40,10 +34,10 @@ void AEndLevel::EndLevel()
 {
 	TArray<ASoundController*> out;
 	FindAllActors(GetWorld(), out);
-	for (ASoundController* var : out)
+	for (ASoundController* soundController : out)
 	{
-		if (var->EngineSound->IsPlaying()) {
-			var->EngineSound->FadeOut(1, 0, EAudioFaderCurve::Sin);
+		if (soundController->EngineSound->IsPlaying()) {
+			soundController->EngineSound->FadeOut(1, 0, EAudioFaderCurve::Sin);
 		}
 	}
 

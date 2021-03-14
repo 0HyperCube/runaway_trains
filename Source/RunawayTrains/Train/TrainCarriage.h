@@ -1,5 +1,3 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
 #pragma once
 
 #include "CoreMinimal.h"
@@ -13,7 +11,9 @@
 
 
 #define TrackSegementT ATrackSegement*
-
+/* 
+ * This class handles the movement of the train carriages
+ */
 UCLASS()
 class RUNAWAYTRAINS_API ATrainCarriage : public AActor
 {
