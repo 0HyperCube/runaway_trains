@@ -36,4 +36,6 @@ protected:
 private:
 	bool Ended;
 
+	void EndLevel();
+
 };

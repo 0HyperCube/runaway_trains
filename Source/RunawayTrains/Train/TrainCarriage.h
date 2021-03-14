@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include <tuple>
 #include "GameFramework/Actor.h"
+#include "Components/AudioComponent.h"
 #include <RunawayTrains\Track\TrackSegement.h>
 #include "Components/BoxComponent.h"
 #include "TrainCarriage.generated.h"
@@ -48,7 +49,11 @@ public:
 
 	UPROPERTY(BlueprintReadWrite, VisibleAnywhere)
 		UBoxComponent* CarriageCollider;
+
+	UPROPERTY(BlueprintReadWrite, VisibleAnywhere)
+		UAudioComponent* CrashSound;
 	
+	// Used to get the world position that is on the track closest to the target. Used for foliage.
 	UFUNCTION(BlueprintImplementableEvent)
 		void FindPositionFromActorLocation();
 

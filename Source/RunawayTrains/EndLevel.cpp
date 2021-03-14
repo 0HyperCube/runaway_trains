@@ -4,6 +4,9 @@
 #include "EndLevel.h"
 #include "Engine/World.h"
 #include "Engine/Engine.h"
+#include "GetActors.h"
+#include "SoundController.h"
+#include "Train/TrainCarriage.h"
 
 // Sets default values
 AEndLevel::AEndLevel()
@@ -21,22 +24,29 @@ AEndLevel::AEndLevel()
 void AEndLevel::LoseLevel()
 {
 	if (Ended) { return; }
-
-	if (GEngine)
-		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, TEXT("Loss!"));
-	EndLevelUI();
+	EndLevel();
 	LoseUI();
-	Ended = true;
 }
 
 void AEndLevel::WinLevel()
 {
 	if (Ended) { return; }
-
-	if (GEngine)
-		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, TEXT("Wyn!"));
-	EndLevelUI();
+	EndLevel();
 	WinUI();
+	
+}
+
+void AEndLevel::EndLevel()
+{
+	TArray<ASoundController*> out;
+	FindAllActors(GetWorld(), out);
+	for (ASoundController* var : out)
+	{
+		var->EngineSound->FadeOut(1, 0, EAudioFaderCurve::Sin);
+	}
+
+
+	EndLevelUI();
 	Ended = true;
 }
 

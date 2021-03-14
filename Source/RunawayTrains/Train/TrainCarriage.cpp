@@ -19,11 +19,21 @@ ATrainCarriage::ATrainCarriage()
 	SetRootComponent(CarriageCollider);
 	CarriageCollider->SetNotifyRigidBodyCollision(true);
 	CarriageCollider->BodyInstance.SetCollisionProfileName("BlockAllDynamic");
+
+	CrashSound = CreateDefaultSubobject<UAudioComponent>(TEXT("CrashSound"));
+	
+
+	CrashSound->SetupAttachment(CarriageCollider);
+	
+
+	CrashSound->bAutoActivate = false;
+	
 }
 
 void ATrainCarriage::Derail()
 {
 	if (IsOnTrack) {
+		CrashSound->Play();
 		IsOnTrack = false;
 		CarriageCollider->SetEnableGravity(true);
 		CarriageCollider->AddImpulse(MovementSpeed, NAME_None, true);
