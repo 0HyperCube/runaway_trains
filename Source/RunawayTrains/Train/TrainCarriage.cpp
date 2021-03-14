@@ -8,6 +8,7 @@
 #include "RunawayTrains/EndLevel.h"
 #include <RunawayTrains/RunawayTrainsGameModeBase.h>
 #include <Runtime/Engine/Public/DrawDebugHelpers.h>
+#include <RunawayTrains/GetActors.h>
 
 // Sets default values
 ATrainCarriage::ATrainCarriage()
@@ -65,6 +66,13 @@ void ATrainCarriage::BeginPlay()
 	else {
 		
 	}
+
+	TArray<ASoundController*> out;
+	FindAllActors(GetWorld(), out);
+	for (ASoundController* var : out)
+	{
+		Sound = var;
+	}
 	
 }
 
@@ -74,7 +82,7 @@ void ATrainCarriage::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 
 	if (IsOnTrack) {
-
+		Sound->bIsTrain = true;
 		UpdatePosition(&BackSegement, &BackDistance, (Speed * DeltaTime), &BackIsBackwards);
 		FVector BackLoc = BackSegement->SplineComponent->GetLocationAtDistanceAlongSpline(BackDistance, ESplineCoordinateSpace::World);
 		DrawDebugPoint(GetWorld(), BackLoc, 5, FColor(52, 220, 239), false);

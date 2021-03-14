@@ -33,4 +33,6 @@ public:
 	UPROPERTY(BlueprintReadWrite, VisibleAnywhere)
 		UAudioComponent* Ambience;
 
+	bool bIsTrain = true;
+
 };

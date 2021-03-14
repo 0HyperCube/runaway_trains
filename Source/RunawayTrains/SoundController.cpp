@@ -38,5 +38,10 @@ void ASoundController::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	if (!bIsTrain) {
+		EngineSound->Stop();
+	}
+	bIsTrain = false;
+
 }
 

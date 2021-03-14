@@ -6,6 +6,7 @@
 #include <tuple>
 #include "GameFramework/Actor.h"
 #include "Components/AudioComponent.h"
+#include <RunawayTrains/SoundController.h>
 #include <RunawayTrains\Track\TrackSegement.h>
 #include "Components/BoxComponent.h"
 #include "TrainCarriage.generated.h"
@@ -71,6 +72,7 @@ private:
 	// The speed in units per second
 	FVector MovementSpeed = FVector::ZeroVector;
 
+	ASoundController* Sound;
 public:
 	// Sets default values for this actor's properties
 	ATrainCarriage();

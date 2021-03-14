@@ -42,7 +42,9 @@ void AEndLevel::EndLevel()
 	FindAllActors(GetWorld(), out);
 	for (ASoundController* var : out)
 	{
-		var->EngineSound->FadeOut(1, 0, EAudioFaderCurve::Sin);
+		if (var->EngineSound->IsPlaying()) {
+			var->EngineSound->FadeOut(1, 0, EAudioFaderCurve::Sin);
+		}
 	}
 
 
